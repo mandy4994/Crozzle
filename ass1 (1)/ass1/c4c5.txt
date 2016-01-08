@@ -1,0 +1,160 @@
+private string NextRowLoop(WordCoordinates w)
+        {
+            string error = "";
+            int count = 0;
+            for (int i = (w.y - (w.word.Length+1)); i <= (w.y + 2) && i < dataGridView1.Columns.Count && i >= 0; i++)
+            {
+
+                int RowNext = (w.x + 1); // next row
+                if (dataGridView1[i, RowNext].Value.ToString() != " ")
+                {
+                    count++;
+                    if (count > 1)// more than one letters
+                    {
+                        error += w.word + " has a word in its next row";
+                        count = 0;
+                        break;
+                    }
+                }
+
+            }
+
+            return error;
+        }
+
+        private string PrevRowLoop(WordCoordinates w)
+        {
+            string error = "";
+            int count = 0;
+            for (int i = (w.y - (w.word.Length+1)); i <= (w.y + 2) && i < dataGridView1.Columns.Count && i >= 0; i++)
+            {
+                int RowPrevious = (w.x - 1);//previous Row
+
+                if (dataGridView1[i, RowPrevious].Value.ToString() != " ")
+                {
+                    count++;
+                    if (count > 1)// more than one letters
+                    {
+                        error += w.word + " has a word in its previous row";
+                        count = 0;
+                        break;
+                    }
+                }
+
+            }
+
+            return error;
+        }
+
+        private string PrevColLoop(WordCoordinates w)
+        {
+            string error = "";
+            int count = 0;
+            for (int i = (w.x - (w.word.Length+1)); i <= (w.x + 2) && i < dataGridView1.Rows.Count && i >= 0; i++)
+            {
+                int ColPrevious = (w.y - 1);//previous Col
+
+                if (dataGridView1[ColPrevious, i].Value.ToString() != " ")
+                {
+                    count++;
+                    if (count > 1)// more than one letters
+                    {
+                        error += w.word + " has a word in its previous col";
+                        count = 0;
+                        break;
+                    }
+                }
+
+            }
+            return error;
+        }
+
+        private string NextColLoop(WordCoordinates w)
+        {
+            string error = "";
+            int count = 0;
+            for (int i = (w.x - (w.word.Length+1)); i <= (w.x + 2) && i < dataGridView1.Rows.Count && i >= 0; i++)
+            {
+                int ColNext = (w.y + 1);//next Col
+
+                if (dataGridView1[ColNext, i].Value.ToString() != " ")
+                {
+                    count++;
+                    if (count > 1)// more than one letters
+                    {
+                        error += w.word + " has a word in its next col";
+                        count = 0;
+                        break;
+                    }
+                }
+
+            }
+            return error;
+        }
+
+
+
+        private string ValidateC4C5()
+        {
+            string error = "";
+            foreach (WordCoordinates w in WordCoordinatesList)
+            {
+                //int count = 0;
+
+                //if ((w.x - (w.word.Length - 1)) != 0 && (w.x - (w.word.Length - 1))  != (dataGridView1.Rows.Count - 1)
+                //    && (w.y - (w.word.Length - 1) != 0) && (w.y - (w.word.Length -1)) != (dataGridView1.Columns.Count - 1)
+                //    && w.x != 0 && w.x != dataGridView1.Rows.Count - 1
+                //    && w.y != 0 && w.y != dataGridView1.Columns.Count - 1)
+                //{
+                    //horizontal
+                    if (w.horizontal == true)
+                    {
+                        if (w.x == 0)
+                        {
+                            error += NextRowLoop(w);
+                        }
+                        else if (w.x == dataGridView1.Rows.Count-1)
+                        {
+                            error += PrevRowLoop(w);
+                        }
+                        else
+                        {
+                            error += NextRowLoop(w) + PrevRowLoop(w);
+                        }
+                    
+                            //Check for previous row
+                           
+                            // Check for next Row
+                            
+
+
+                        }
+                        //vertical
+                        else
+                        {
+                            if (w.y == 0)
+                            {
+                                error += NextColLoop(w);
+                            }
+                            else if (w.y == dataGridView1.Columns.Count-1)
+                            {
+                                error += PrevColLoop(w);
+                            }
+                            else
+                            {
+                                error += NextColLoop(w) + PrevColLoop(w);
+                            }
+                            
+
+
+
+                        }
+                //}
+            
+            
+            }
+            StreamWriter logFile = new StreamWriter("log.txt", true);
+            logFile.WriteLine(error);
+            logFile.Close();
+            return error;
+        }
